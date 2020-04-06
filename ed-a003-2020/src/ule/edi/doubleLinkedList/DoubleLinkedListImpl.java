@@ -34,7 +34,6 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 		// añadir atributos
 
 		public DobleLinkedListIterator(DoubleNode<T> nodo) {
-			// todo
 
 		}
 
@@ -70,8 +69,7 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.front == null;
 	}
 
 	@Override
@@ -82,38 +80,162 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 
 	@Override
 	public void insertFirst(T elem) {
-		// TODO Auto-generated method stub
+		/*
+		 * Si el elemento a eliminar es nulo se lanza la excepcion marcada en la
+		 * documentacion
+		 */
+		if (elem == null)
+			throw new NullPointerException();
 
+		if (this.isEmpty()) {
+			/* Si la lista esta vacia se asigna el front y el last al elemento */
+			this.front.elem = elem;
+			this.last.elem = elem;
+			this.front.next = this.last;
+			this.last.prev = this.front;
+		} else {
+			/*
+			 * Si no se crea un nuevo nodo para almacenar el front y llevarlo a la segunda
+			 * posicion
+			 */
+			DoubleNode<T> aux = this.front;
+			this.front.elem = elem;
+			this.front.next = aux;
+			aux.prev = this.front;
+		}
 	}
 
 	@Override
 	public void insertLast(T elem) {
-		// TODO Auto-generated method stub
+		/*
+		 * Si el elemento a eliminar es nulo se lanza la excepcion marcada en la
+		 * documentacion
+		 */
+		if (elem == null)
+			throw new NullPointerException();
 
+		if (this.isEmpty()) {
+			/* Si la lista esta vacia se asigna el front y el last al elemento */
+			this.front.elem = elem;
+			this.last.elem = elem;
+			this.front.next = this.last;
+			this.last.prev = this.front;
+		} else {
+			/*
+			 * Si no se crea un nuevo nodo para almacenar el last y llevarlo a la penultima
+			 * posicion
+			 */
+			DoubleNode<T> aux = this.last;
+			this.last.elem = elem;
+			this.last.prev = aux;
+			aux.next = this.last;
+		}
 	}
 
 	@Override
 	public T removeFirst() throws EmptyCollectionException {
-		// TODO Auto-generated method stub
-		return null;
+		/* Si la lista esta vacia se lanza la excepcion marcada en la documentacion */
+		if (this.isEmpty())
+			throw new EmptyCollectionException("DoubleLinkedList");
+
+		T elemReturn = this.front.elem;
+		if (this.front.next != null) {
+			/* Si hay mas de un elemento se mueve el segundo a la primera posicion */
+			this.front = this.front.next;
+			this.front.prev = null;
+		} else {
+			/* Si no se llama al metodo que limpia la lista */
+			this.clear();
+		}
+		return elemReturn;
 	}
 
 	@Override
 	public T removeLast() throws EmptyCollectionException {
-		// TODO Auto-generated method stub
-		return null;
+		/* Si la lista esta vacia se lanza la excepcion marcada en la documentacion */
+		if (this.isEmpty())
+			throw new EmptyCollectionException("DoubleLinkedList");
+
+		T elemReturn = this.front.elem;
+		if (this.last.prev != null) {
+			/* Si hay mas de un elemento se mueve el segundo a la primera posicion */
+			this.last = this.last.prev;
+			this.last.next = null;
+		} else {
+			/* Si no se llama al metodo que limpia la lista */
+			this.clear();
+		}
+		return elemReturn;
 	}
 
 	@Override
 	public void insertPos(T elem, int position) {
-		// TODO Auto-generated method stub
+		/*
+		 * Si el elemento a eliminar es nulo se lanza la excepcion marcada en la
+		 * documentacion
+		 */
+		if (elem == null)
+			throw new NullPointerException();
+		/*
+		 * Si el indice no esta entre las dimensiones del array se lanza la excepcion
+		 * marcada en la documentacion
+		 */
+		if (--position < 0 || position > this.size())
+			throw new IllegalArgumentException();
 
+		/*
+		 * Se comprueba si se quiere introducir el primero para llamar al metodo
+		 * pertinente
+		 */
+		if (position == 0) {
+			this.insertFirst(elem);
+			return;
+		}
+
+		/* Se recorre con un bucle while hasta la posicion indicada como parametro */
+		DoubleNode<T> aux = this.front;
+		while (position != 0) {
+			aux = aux.next;
+			position--;
+		}
+		DoubleNode<T> inserted = new DoubleNode<>(elem);
+		/* Si es el ultimo no se enlaza el siguiente (Evitar NullPointerException) */
+		if (aux.next != null)
+			aux.next.prev = inserted;
+
+		/* Se enlaza el nuevo elemento en esa posicion */
+		inserted.next = aux.next;
+		aux.next = inserted;
+		inserted.prev = aux;
 	}
 
 	@Override
 	public void insertBefore(T elem, T target) {
-		// TODO Auto-generated method stub
+		/*
+		 * Si alguno de los dos elementos pasados como parametro es nulo se lanza la
+		 * excepcion marcada en la documentacion
+		 */
+		if (elem == null || target == null)
+			throw new NullPointerException();
+	
+		/* Si la lista no contiene el elemento a buscar se lanza la excepcion marcada en la documentacion */
+		if(!this.contains(target))
+			throw new NoSuchElementException();
+		
+		/* Si se llega aqui al menos hay un elemento por lo que se busca en un bucle el elemento */
+		DoubleNode<T> aux = this.front;
+		while (aux.elem != target) 
+			aux = aux.next;
+		
+		DoubleNode<T> inserted = new DoubleNode<>(elem);
+		/* Si es el primero no se enlaza el anterior (Evitar NullPointerException) */
+		if (aux.prev != null)
+			aux.prev.next = inserted;
 
+		/* Se enlaza el nuevo elemento en esa posicion */
+		inserted.prev = aux.prev;
+		aux.prev = inserted;
+		inserted.next = aux;
 	}
 
 	@Override
@@ -136,8 +258,38 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 
 	@Override
 	public T removePos(int pos) {
-		// TODO Auto-generated method stub
-		return null;
+		/*
+		 * Si la posicion a eliminar esta fuera de los limites del array se lanza la
+		 * excepcion marcada en la documentacion
+		 */
+		if (pos < 0 || pos > this.size())
+			throw new IllegalArgumentException();
+
+		/*
+		 * Si se quiere borrar el unico elemento de la lista se llama al metodo clear
+		 */
+		if (--pos == 0 && this.front.next == null) {
+			T returnElem = this.front.elem;
+			this.clear();
+			return returnElem;
+		}
+
+		/*
+		 * Se avanza en un bucle for el numero de veces desde el inicio hasta llegar al
+		 * elemento deseado
+		 */
+		DoubleNode<T> aux = this.front;
+		for (int i = 0; i < pos; i++)
+			aux = aux.next;
+
+		/*
+		 * Una vez llegado se guarda ese elemento, se sobrescribe en la cola y se
+		 * devuelve
+		 */
+		T returnElem = aux.elem;
+		aux.prev.next = aux.next;
+		aux.next.prev = aux.prev;
+		return returnElem;
 	}
 
 	@Override
@@ -174,10 +326,12 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 				 * Si es el primer elemento se mueve el front, si no se elimina el elemento
 				 * saltandolo
 				 */
-				if (aux.prev == null)
+				if (aux.prev == null) {
 					this.front = this.front.next;
-				else
+				} else {
 					aux.prev.next = aux.next;
+					aux.next.prev = aux.prev;
+				}
 				apariciones++;
 			}
 			aux = aux.next;
