@@ -133,11 +133,11 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 			T elemReturn = this.nodo.elem;
 			this.nodo = this.nodo.next;
 			/* Si es posible se avanza las veces que toque en la progresion */
-			for (int i = 0; i < this.iteratorProgressed; i++) 
+			for (int i = 0; i < this.iteratorProgressed; i++)
 				if (this.nodo != null)
 					this.nodo = this.nodo.next;
 			this.iteratorProgressed++;
-			
+
 			return elemReturn;
 		}
 
@@ -339,10 +339,13 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 
 	@Override
 	public T getElemPos(int position) {
-		/* Se comprueba la validez de la posicion para lanzar la excepcion marcada en la documentacion */
+		/*
+		 * Se comprueba la validez de la posicion para lanzar la excepcion marcada en la
+		 * documentacion
+		 */
 		if (--position < 0 || position >= this.size())
 			throw new IllegalArgumentException();
-		
+
 		/* Se avanza en un bucle desde el inicio hasta la posicion requerida */
 		DoubleNode<T> aux = this.front;
 		for (int i = 0; i < position; i++)
@@ -355,11 +358,17 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 		/* Si el elemento es nulo se lanza la excepcion marcada en la documentacion */
 		if (elem == null)
 			throw new NullPointerException();
-		/* Si la lista no contiene el elemento a buscar se lanza la excepcion marcada en la documentacion */
+		/*
+		 * Si la lista no contiene el elemento a buscar se lanza la excepcion marcada en
+		 * la documentacion
+		 */
 		if (!this.contains(elem))
 			throw new NoSuchElementException();
-		
-		/* Se avanza en un bucle de principio a fin buscando la primera aparicion del elemento */
+
+		/*
+		 * Se avanza en un bucle de principio a fin buscando la primera aparicion del
+		 * elemento
+		 */
 		int pos = 1;
 		DoubleNode<T> aux = this.front;
 		while (!aux.elem.equals(elem)) {
@@ -374,11 +383,17 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 		/* Si el elemento es nulo se lanza la excepcion marcada en la documentacion */
 		if (elem == null)
 			throw new NullPointerException();
-		/* Si la lista no contiene el elemento a buscar se lanza la excepcion marcada en la documentacion */
+		/*
+		 * Si la lista no contiene el elemento a buscar se lanza la excepcion marcada en
+		 * la documentacion
+		 */
 		if (!this.contains(elem))
 			throw new NoSuchElementException();
-		
-		/* Se avanza en un bucle del final hasta el inicio buscando la primera aparicion del elemento */
+
+		/*
+		 * Se avanza en un bucle del final hasta el inicio buscando la primera aparicion
+		 * del elemento
+		 */
 		int pos = this.size();
 		DoubleNode<T> aux = this.last;
 		while (!aux.elem.equals(elem)) {
@@ -486,11 +501,8 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 		 */
 		if (elem == null)
 			throw new NullPointerException();
-		/* Si la lista esta vacia no va a contener el elemento */
-		if (this.isEmpty())
-			return false;
 		/*
-		 * Se recorre la lista desde front a last con un do-while por si solo hay un
+		 * Se recorre la lista desde front a last con un while por si solo hay un
 		 * elemento
 		 */
 		DoubleNode<T> aux = this.front;
@@ -500,7 +512,6 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 				return true;
 			aux = aux.next;
 		}
-
 		/*
 		 * Si se ha recorrido todo el bucle y no se ha encontrado ninguna coincidencia
 		 * se devuelve false
@@ -622,11 +633,17 @@ public class DoubleLinkedListImpl<T> implements DoubleList<T> {
 		if (other == null)
 			throw new NullPointerException();
 
+		/*
+		 * Si la lista a comparar es mayor que nuestra lista ya no va a poder ser una
+		 * sublista
+		 */
 		if (other.size() > this.size())
 			return false;
 
+		/* Una lista vacia siempre va a ser una sublista */
 		if (other.isEmpty())
 			return true;
+
 		/*
 		 * Se recorre la lista parametro comprobando si cada elemento pertenece a
 		 * nuestra lista
